@@ -11,9 +11,12 @@ public class Movement : MonoBehaviour
     public Rigidbody2D rb;
     private AnimationScript anim;
 
+    // for toggle 
+    bool newMovement = false;
+
     [Space]
     [Header("Stats")]
-    public float speed = 10;
+    public float speed = 5;
     public float jumpForce = 50;
     public float slideSpeed = 5;
     public float wallJumpLerp = 10;
@@ -60,6 +63,10 @@ public class Movement : MonoBehaviour
 
         Walk(dir);
         anim.SetHorizontalMovement(x, y, rb.velocity.y);
+
+        if (Input.GetKeyDown("e")){
+            switchParams();
+        }
 
         if (coll.onWall && Input.GetButton("Fire3") && canMove)
         {
@@ -120,8 +127,23 @@ public class Movement : MonoBehaviour
 
         if (Input.GetButtonDown("Fire1") && !hasDashed)
         {
+            print("old movement");
             if(xRaw != 0 || yRaw != 0)
-                Dash(xRaw, yRaw);
+                Dash(xRaw, yRaw);    
+        }
+
+        // dashes in direction character is already pivoted towards
+        // for now we have the character moving xRaw + or - 5 depending on dir
+        if (newMovement){
+            if (Input.GetButtonDown("Fire1") && !hasDashed)
+            {
+                if (side == -1){
+                     Dash(xRaw - 5, yRaw); 
+                }
+                else{
+                     Dash(xRaw + 5, yRaw); 
+                }   
+            }
         }
 
         if (coll.onGround && !groundTouch)
@@ -168,7 +190,7 @@ public class Movement : MonoBehaviour
     {
         Camera.main.transform.DOComplete();
         Camera.main.transform.DOShakePosition(.2f, .5f, 14, 90, false, true);
-        FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
+        //FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
 
         hasDashed = true;
 
@@ -305,5 +327,15 @@ public class Movement : MonoBehaviour
     {
         int particleSide = coll.onRightWall ? 1 : -1;
         return particleSide;
+    }
+
+    void switchParams(){
+        newMovement = !newMovement;
+        if (newMovement){
+            //float dashSpeed = 30;
+        }
+        else {
+            //float dashSpeed = 20;
+        }
     }
 }
