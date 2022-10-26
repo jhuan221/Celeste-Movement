@@ -50,6 +50,9 @@ public class Movement : MonoBehaviour
         coll = GetComponent<Collision>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<AnimationScript>();
+
+        // reference from materials
+        //material = GetComponent<SpriteRenderer>().material;
     }
 
     // Update is called once per frame
@@ -291,7 +294,6 @@ public class Movement : MonoBehaviour
         ParticleSystem particle = wall ? wallJumpParticle : jumpParticle;
 
         rb.velocity = new Vector2(rb.velocity.x, 0);
-        print("jump force: "+ jumpForce);
         rb.velocity += dir * jumpForce;
 
         particle.Play();
