@@ -127,7 +127,6 @@ public class Movement : MonoBehaviour
 
         if (Input.GetButtonDown("Fire1") && !hasDashed)
         {
-            print("old movement");
             if(xRaw != 0 || yRaw != 0)
                 Dash(xRaw, yRaw);    
         }
@@ -190,7 +189,8 @@ public class Movement : MonoBehaviour
     {
         Camera.main.transform.DOComplete();
         Camera.main.transform.DOShakePosition(.2f, .5f, 14, 90, false, true);
-        //FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
+        if (!newMovement)
+            FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
 
         hasDashed = true;
 
@@ -291,6 +291,7 @@ public class Movement : MonoBehaviour
         ParticleSystem particle = wall ? wallJumpParticle : jumpParticle;
 
         rb.velocity = new Vector2(rb.velocity.x, 0);
+        print("jump force: "+ jumpForce);
         rb.velocity += dir * jumpForce;
 
         particle.Play();
@@ -332,10 +333,10 @@ public class Movement : MonoBehaviour
     void switchParams(){
         newMovement = !newMovement;
         if (newMovement){
-            //float dashSpeed = 30;
+            jumpForce = 14;
         }
         else {
-            //float dashSpeed = 20;
+            jumpForce = 12;
         }
     }
 }
